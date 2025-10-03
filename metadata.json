@@ -1,0 +1,5 @@
+{
+  "name": "AI HTML Code Generator",
+  "description": "An AI-powered application that analyzes images and text prompts to generate professional, fully functional, and detailed HTML code using the Gemini API.",
+  "requestFramePermissions": []
+}
