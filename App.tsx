@@ -10,6 +10,7 @@ import { generateHtmlFromImageAndPrompt } from './services/geminiService';
 import { Toast } from './components/Toast';
 import type { ViewMode } from './types';
 import { MIN_PROMPT_LENGTH } from './constants';
+import { citySceneHtml } from './services/cityScene';
 
 const App: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -66,6 +67,13 @@ const App: React.FC = () => {
   
   const isGenerateButtonDisabled = isLoading || prompt.trim().length < MIN_PROMPT_LENGTH;
 
+  const handleLoadDemo = () => {
+    setError(null);
+    setGeneratedCode(citySceneHtml);
+    setViewMode('preview');
+    setPrompt('Create a cinematic 3D city simulation with buildings, streets, parks, people, and cars using Three.js.');
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-900 text-gray-100">
       <Header />
@@ -81,22 +89,31 @@ const App: React.FC = () => {
             />
             <PromptInput prompt={prompt} setPrompt={setPrompt} />
           </div>
-           <button
-            onClick={handleGenerate}
-            disabled={isGenerateButtonDisabled}
-            className={`mt-6 w-full py-3 px-6 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out flex items-center justify-center gap-2 ${
-              isGenerateButtonDisabled
-                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                : 'bg-cyan-500 hover:bg-cyan-400 text-white shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-1'
-            }`}
-          >
-            {isLoading ? <LoadingSpinner /> : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                Generate Code
-              </>
-            )}
-          </button>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+             <button
+              onClick={handleGenerate}
+              disabled={isGenerateButtonDisabled}
+              className={`w-full py-3 px-6 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out flex items-center justify-center gap-2 ${
+                isGenerateButtonDisabled
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-cyan-500 hover:bg-cyan-400 text-white shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-1'
+              }`}
+            >
+              {isLoading ? <LoadingSpinner /> : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                  Generate Code
+                </>
+              )}
+            </button>
+             <button
+              onClick={handleLoadDemo}
+              className="w-full py-3 px-6 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg hover:shadow-emerald-500/50 transform hover:-translate-y-1"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m-6 0h6m-6 0a2 2 0 01-2-2v-2a2 2 0 012-2h.01M15 9a3 3 0 10-6 0 3 3 0 006 0z" /></svg>
+              Load 3D City Demo
+            </button>
+           </div>
         </div>
 
         {/* Right Panel: Outputs */}
