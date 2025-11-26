@@ -274,7 +274,11 @@ export const citySceneHtml = `<!DOCTYPE html>
       wheels[1].position.set(1.6, 0.7, 1.1);
       wheels[2].position.set(-1.6, 0.7, -1.1);
       wheels[3].position.set(1.6, 0.7, -1.1);
-      wheels.forEach(w => { w.castShadow = true; w.receiveShadow = true; group.add(w); });
+      wheels.forEach((wheel) => {
+        wheel.castShadow = true;
+        wheel.receiveShadow = true;
+        group.add(wheel);
+      });
       group.add(body, cabin);
       scene.add(group);
       return group;
@@ -314,7 +318,7 @@ export const citySceneHtml = `<!DOCTYPE html>
     const updateCars = (delta) => {
       time += delta;
       const signal = Math.sin(time * 0.35) > 0;
-      lights.forEach((light, idx) => {
+      lights.forEach((light) => {
         light.material.emissive.setHex(signal ? 0x63ff7c : 0xff5b61);
         light.material.color.setHex(signal ? 0x63ff7c : 0xff5b61);
         light.scale.set(1, signal ? 1.05 : 0.85, 1);
@@ -360,7 +364,7 @@ export const citySceneHtml = `<!DOCTYPE html>
       });
     };
 
-    const updatePeople = (delta) => {
+    const updatePeople = () => {
       people.forEach((person, idx) => {
         const radius = 6 + idx * 1.4;
         const speed = 0.3 + idx * 0.05;
@@ -391,7 +395,7 @@ export const citySceneHtml = `<!DOCTYPE html>
 
       controls.update();
       updateCars(delta);
-      updatePeople(delta);
+      updatePeople();
 
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
