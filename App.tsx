@@ -74,6 +74,21 @@ const App: React.FC = () => {
     setPrompt('Create a cinematic 3D city simulation with buildings, streets, parks, people, and cars using Three.js.');
   };
 
+  const handleOpenPreviewTab = () => {
+    if (!generatedCode) return;
+
+    const blob = new Blob([generatedCode], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+
+    if (!newWindow) {
+      setError('Please allow pop-ups to open the preview in a new tab.');
+    }
+
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-900 text-gray-100">
       <Header />
@@ -121,18 +136,30 @@ const App: React.FC = () => {
           <div className="flex-shrink-0 p-4 border-b border-gray-700">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-cyan-400">2. Review Output</h2>
-              <div className="flex space-x-2 bg-gray-700 p-1 rounded-lg">
-                <button 
-                  onClick={() => setViewMode('code')}
-                  className={`px-4 py-1 rounded-md text-sm font-medium transition ${viewMode === 'code' ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-600'}`}
-                >
-                  Code
-                </button>
+              <div className="flex items-center gap-2">
+                <div className="flex space-x-2 bg-gray-700 p-1 rounded-lg">
+                  <button
+                    onClick={() => setViewMode('code')}
+                    className={`px-4 py-1 rounded-md text-sm font-medium transition ${viewMode === 'code' ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-600'}`}
+                  >
+                    Code
+                  </button>
+                  <button
+                    onClick={() => setViewMode('preview')}
+                    className={`px-4 py-1 rounded-md text-sm font-medium transition ${viewMode === 'preview' ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-600'}`}
+                  >
+                    Preview
+                  </button>
+                </div>
                 <button
-                  onClick={() => setViewMode('preview')}
-                  className={`px-4 py-1 rounded-md text-sm font-medium transition ${viewMode === 'preview' ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-600'}`}
+                  onClick={handleOpenPreviewTab}
+                  disabled={!generatedCode}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed ${generatedCode ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/40' : 'bg-gray-700 text-gray-400'}`}
                 >
-                  Preview
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 11V7a2 2 0 012-2h4m0 0l-5 5m5-5v4a2 2 0 01-2 2h-4M7 7h3M7 11h3M7 15h3" />
+                  </svg>
+                  Open Preview
                 </button>
               </div>
             </div>
