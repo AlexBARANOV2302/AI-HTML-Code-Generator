@@ -3,11 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = process.env.API_KEY;
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable is not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 const getSystemInstruction = () => {
   return `You are an world-class AI-powered HTML Code Generator. Your primary purpose is to assist users in creating highly professional, fully functional, and extremely detailed HTML code structures for web pages, components, or entire websites.
@@ -34,6 +30,10 @@ export const generateHtmlFromImageAndPrompt = async (
   userPrompt: string
 ): Promise<string> => {
   try {
+    if (!ai) {
+      throw new Error('API_KEY environment variable is not set. Please set API_KEY to enable Gemini-powered generation.');
+    }
+
     const systemInstruction = getSystemInstruction();
 
     const parts: ({ text: string; } | { inlineData: { data: string; mimeType: string; }; })[] = [
